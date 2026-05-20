@@ -1,0 +1,72 @@
+tolu's bash automation script
+;:#!/bin/bash
+# A safe GitHub push automation script
+
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# Function to display error messages
+error_exit() {
+    echo "❌ Error: $1"
+    exit 1
+}
+
+# Check if inside a Git repository
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    error_exit "This is not a Git repository. Please run inside a repo."
+fi
+
+# Ask for commit message
+read -rp "Enter commit message: " commit_msg
+if [[ -z "$commit_msg" ]]; then
+    error_exit "Commit message cannot be empty."
+fi
+
+# Stage all changes
+git add . || error_exit "Failed to stage changes."
+
+# Commit changes
+git commit -m "$commit_msg" || error_exit "Commit failed."
+
+# Pull latest changes to avoid conflicts
+git pull --rebase || error_exit "Git pull failed."
+
+# Push changes to the current branch
+current_branch=$(git branch --show-current)
+if [[ -z "$current_branch" ]]; then
+    error_exit "Could not determine current branch."
+fi
+
+git push origin "$current_branch" || error_exit "Push failed."
+
+echo "✅ Successfully pushed changes to branch '$current_branch'."
+tolu's bash script
+
+
+
+
+
+ 
+
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
